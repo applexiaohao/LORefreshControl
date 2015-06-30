@@ -29,7 +29,7 @@ typedef NS_ENUM(NSInteger, LORefreshState){
 
 
 
-@interface LORefresh : UIView
+@interface LORefreshControl : UIView
 
 //设置布局样式,默认样式LORefreshLayoutTypeLeftIndicator 左右布局:左风火轮(或 gif),右标题
 @property(nonatomic, assign) LORefreshLayoutType refreshLayoutType;
@@ -68,13 +68,13 @@ typedef NS_ENUM(NSInteger, LORefreshState){
 
 
 //获取默认类型的 header,如果 scrollView 没有添加 默认 header,返回 nil
-- (LORefresh *)defaultHeader;
+- (LORefreshControl *)defaultHeader;
 
 //获取gif类型的 header,如果 scrollView 没有添加 gif header,返回 nil
-- (LORefresh *)gifHeader;
+- (LORefreshControl *)gifHeader;
 
 //获取默认类型的  footer,如果 scrollView 没有添加  footer,返回 nil
-- (LORefresh *)defaultFooter;
+- (LORefreshControl *)defaultFooter;
 
 @end
 

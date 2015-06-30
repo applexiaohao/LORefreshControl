@@ -6,7 +6,7 @@
 //  Copyright (c) 2015年 蓝鸥科技. All rights reserved.
 //
 
-#import "LORefresh.h"
+#import "LORefreshControl.h"
 #import <ImageIO/ImageIO.h>
 #pragma mark - 相关宏定义
 
@@ -51,7 +51,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 #pragma mark - LORefresh 延展
 
-@interface LORefresh ()
+@interface LORefreshControl ()
 {
     UIImageView *_arrowImageView;               //箭头
     UIActivityIndicatorView *_indicatorView;    //风火轮
@@ -86,7 +86,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 
 
-@interface LORefreshHeaderDefault : LORefresh
+@interface LORefreshHeaderDefault : LORefreshControl
 {
     CGFloat _edgeInsetsTop;
 }
@@ -143,7 +143,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
     switch (_refreshLayoutType) {
         case LORefreshLayoutTypeLeftIndicator:
         {
-            CGFloat width = [LORefresh labelFit:[self textLabel].text andFont:LORefreshLabelFont];
+            CGFloat width = [LORefreshControl labelFit:[self textLabel].text andFont:LORefreshLabelFont];
             CGFloat totalWidth = 22 + 10 + width;
             CGFloat indicatorViewX =( [UIScreen mainScreen].bounds.size.width - totalWidth)/ 2;
             
@@ -164,7 +164,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
         case LORefreshLayoutTypeRightIndicator:
         {
             CGFloat height = kHeaderHeight / 2;
-            CGFloat width = [LORefresh labelFit:[self textLabel].text andFont:LORefreshLabelFont];
+            CGFloat width = [LORefreshControl labelFit:[self textLabel].text andFont:LORefreshLabelFont];
             
             CGFloat leftWidth = (kScreenWidth - width - LORefreshLabelAndIndicatorSpace - 22) / 2;
             [self textLabel].frame = CGRectMake(leftWidth, 0, width , kHeaderHeight);
@@ -295,7 +295,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 #pragma mark - LORefreshFooterDefault 类
 
-@interface LORefreshHeaderGIF : LORefresh
+@interface LORefreshHeaderGIF : LORefreshControl
 {
     CGFloat _edgeInsetsTop;
 }
@@ -386,7 +386,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
     switch (_refreshLayoutType) {
         case LORefreshLayoutTypeLeftIndicator:
         {
-            CGFloat width = [LORefresh labelFit:[self textLabel].text andFont:LORefreshLabelFont];
+            CGFloat width = [LORefreshControl labelFit:[self textLabel].text andFont:LORefreshLabelFont];
             CGFloat totalWidth = 40 + 10 + width;
             CGFloat indicatorViewX =(self.scrollView.bounds.size.width - totalWidth)/ 2;
             
@@ -405,7 +405,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
         case LORefreshLayoutTypeRightIndicator:
         {
             CGFloat height = kHeaderHeight / 2;
-            CGFloat width = [LORefresh labelFit:[self textLabel].text andFont:LORefreshLabelFont];
+            CGFloat width = [LORefreshControl labelFit:[self textLabel].text andFont:LORefreshLabelFont];
             
             CGFloat leftWidth = (kScreenWidth - width - LORefreshLabelAndIndicatorSpace - 40) / 2;
             [self textLabel].frame = CGRectMake(leftWidth, 0, width , kHeaderHeight);
@@ -526,7 +526,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 #pragma mark - LORefreshFooterDefault 类
 
 
-@interface LORefreshFooterDefault : LORefresh
+@interface LORefreshFooterDefault : LORefreshControl
 
 
 @end
@@ -560,7 +560,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
         case LORefreshLayoutTypeLeftIndicator:{
             CGFloat imageW = 15;
             CGFloat imageH = 40;
-            CGFloat labelW = [LORefresh labelFit:[self textLabel].text andFont:LORefreshLabelFont];
+            CGFloat labelW = [LORefreshControl labelFit:[self textLabel].text andFont:LORefreshLabelFont];
             CGFloat imageX = (kScreenWidth - labelW - 10 - imageW) / 2;
             CGFloat imageY = (kHeaderHeight - imageH) / 2;
             CGFloat labelX = imageX + imageW + 10;
@@ -581,7 +581,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
             break;
         }
         case LORefreshLayoutTypeRightIndicator:{
-            CGFloat width = [LORefresh labelFit:[self textLabel].text andFont:LORefreshLabelFont];
+            CGFloat width = [LORefreshControl labelFit:[self textLabel].text andFont:LORefreshLabelFont];
             CGFloat totalWidth = 22 + 10 + width;
             CGFloat textLabelX =( [UIScreen mainScreen].bounds.size.width - totalWidth)/ 2;
             
@@ -734,7 +734,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 #pragma mark - LORefresh 实现部分
 
-@implementation LORefresh
+@implementation LORefreshControl
 @synthesize scrollView = _scrollView;
 
 - (void)dealloc
@@ -760,7 +760,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
     //如果 其他 开发者要扩展 LORefresh 类,可以增加枚举值,增加 LORefresh 的子类
     if (refreshViewType < [classNames count]) {
         Class className = NSClassFromString(classNames[refreshViewType]);
-        LORefresh *refresh = [[className alloc] init];
+        LORefreshControl *refresh = [[className alloc] init];
         refresh.refreshingBlock = block;
         
         return [refresh autorelease];
@@ -894,7 +894,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 - (void)addRefreshWithRefreshViewType:(LORefreshViewType)refreshViewType refreshingBlock:(void (^)())block
 {
-    LORefresh *refresh = [LORefresh refreshWithRefreshViewType:refreshViewType refreshingBlock:block];
+    LORefreshControl *refresh = [LORefreshControl refreshWithRefreshViewType:refreshViewType refreshingBlock:block];
     refresh.scrollView = self;
     
     [self addObserver:refresh forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
@@ -902,19 +902,19 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 }
 
 
-- (LORefresh *)defaultHeader
+- (LORefreshControl *)defaultHeader
 {
-    return (LORefresh *)[self viewWithTag:1000000];
+    return (LORefreshControl *)[self viewWithTag:1000000];
 }
 
-- (LORefresh *)gifHeader
+- (LORefreshControl *)gifHeader
 {
-    return (LORefresh *)[self viewWithTag:1000001];
+    return (LORefreshControl *)[self viewWithTag:1000001];
 }
 
-- (LORefresh *)defaultFooter
+- (LORefreshControl *)defaultFooter
 {
-    return (LORefresh *)[self viewWithTag:1000002];
+    return (LORefreshControl *)[self viewWithTag:1000002];
 }
 
 @end

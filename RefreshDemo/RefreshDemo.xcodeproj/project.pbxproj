@@ -16,8 +16,9 @@
 		08F1F3901B3BE08B009CAFF3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08F1F38F1B3BE08B009CAFF3 /* Images.xcassets */; };
 		08F1F3931B3BE08B009CAFF3 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08F1F3911B3BE08B009CAFF3 /* LaunchScreen.xib */; };
 		08F1F39F1B3BE08B009CAFF3 /* RefreshDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F1F39E1B3BE08B009CAFF3 /* RefreshDemoTests.m */; };
-		08F1F3AA1B3BF500009CAFF3 /* LORefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 08F1F3A91B3BF500009CAFF3 /* LORefresh.m */; };
 		08F1F3AC1B3BFE83009CAFF3 /* arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 08F1F3AB1B3BFE83009CAFF3 /* arrow@2x.png */; };
+		F63E0C531B48C5DF006ED73A /* LOProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = F63E0C501B48C5DF006ED73A /* LOProgressView.m */; };
+		F63E0C541B48C5DF006ED73A /* LORefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F63E0C521B48C5DF006ED73A /* LORefreshControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,9 +48,11 @@
 		08F1F3981B3BE08B009CAFF3 /* RefreshDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RefreshDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08F1F39D1B3BE08B009CAFF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08F1F39E1B3BE08B009CAFF3 /* RefreshDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RefreshDemoTests.m; sourceTree = "<group>"; };
-		08F1F3A81B3BF500009CAFF3 /* LORefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LORefresh.h; sourceTree = "<group>"; };
-		08F1F3A91B3BF500009CAFF3 /* LORefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LORefresh.m; sourceTree = "<group>"; };
 		08F1F3AB1B3BFE83009CAFF3 /* arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow@2x.png"; sourceTree = "<group>"; };
+		F63E0C4F1B48C5DF006ED73A /* LOProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LOProgressView.h; sourceTree = "<group>"; };
+		F63E0C501B48C5DF006ED73A /* LOProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LOProgressView.m; sourceTree = "<group>"; };
+		F63E0C511B48C5DF006ED73A /* LORefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LORefreshControl.h; sourceTree = "<group>"; };
+		F63E0C521B48C5DF006ED73A /* LORefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LORefreshControl.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,14 +94,13 @@
 		08F1F3811B3BE08B009CAFF3 /* RefreshDemo */ = {
 			isa = PBXGroup;
 			children = (
+				F63E0C4E1B48C5DF006ED73A /* RefreshControl */,
 				08F1F3861B3BE08B009CAFF3 /* AppDelegate.h */,
 				08F1F3871B3BE08B009CAFF3 /* AppDelegate.m */,
 				08F1F3891B3BE08B009CAFF3 /* ViewController.h */,
 				08F1F38A1B3BE08B009CAFF3 /* ViewController.m */,
 				08ECA5EA1B3D08A300824B5E /* TableViewController.h */,
 				08ECA5EB1B3D08A300824B5E /* TableViewController.m */,
-				08F1F3A81B3BF500009CAFF3 /* LORefresh.h */,
-				08F1F3A91B3BF500009CAFF3 /* LORefresh.m */,
 				08F1F3AB1B3BFE83009CAFF3 /* arrow@2x.png */,
 				08AEDCE01B416CBD005CD109 /* demo.gif */,
 				08F1F38C1B3BE08B009CAFF3 /* Main.storyboard */,
@@ -133,6 +135,18 @@
 				08F1F39D1B3BE08B009CAFF3 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F63E0C4E1B48C5DF006ED73A /* RefreshControl */ = {
+			isa = PBXGroup;
+			children = (
+				F63E0C4F1B48C5DF006ED73A /* LOProgressView.h */,
+				F63E0C501B48C5DF006ED73A /* LOProgressView.m */,
+				F63E0C511B48C5DF006ED73A /* LORefreshControl.h */,
+				F63E0C521B48C5DF006ED73A /* LORefreshControl.m */,
+			);
+			name = RefreshControl;
+			path = ../../RefreshControl;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,10 +251,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08F1F3AA1B3BF500009CAFF3 /* LORefresh.m in Sources */,
 				08F1F38B1B3BE08B009CAFF3 /* ViewController.m in Sources */,
+				F63E0C531B48C5DF006ED73A /* LOProgressView.m in Sources */,
 				08F1F3881B3BE08B009CAFF3 /* AppDelegate.m in Sources */,
 				08ECA5EC1B3D08A300824B5E /* TableViewController.m in Sources */,
+				F63E0C541B48C5DF006ED73A /* LORefreshControl.m in Sources */,
 				08F1F3851B3BE08B009CAFF3 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,6 +8,8 @@
 
 #import "LORefreshControl.h"
 #import <ImageIO/ImageIO.h>
+#import "LOProgressView.h"
+
 #pragma mark - 相关宏定义
 
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -729,10 +731,134 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 @end
 
 
+#pragma mark - add by lewis 2015.06.30
+#pragma mark - LORefreshHeaderProgress
+@interface LORefreshHeaderProgress : LORefreshControl
+
+@property (nonatomic ,retain)LOCircleProgressView *circle_view;
+
+@end
+
+@implementation LORefreshHeaderProgress
+
+- (instancetype)init
+{
+    self = [super initWithFrame:CGRectMake(0, 0, kScreenWidth, kFooterHeight)];
+    if (self) {
+        
+        self.circle_view = [[LOCircleProgressView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+        self.circle_view.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        
+        [self addSubview:self.circle_view];
+        self.tag = 1000002;
+    }
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    /*
+    switch (_refreshLayoutType) {
+        case LORefreshLayoutTypeLeftIndicator:{
+            break;
+        }
+        case LORefreshLayoutTypeTopIndicator:{
+            break;
+        }
+        case LORefreshLayoutTypeRightIndicator:{
+            break;
+        }
+        default:
+            break;
+    }
+    */
+}
+
+- (void)beginRefreshing
+{
+    self.headerState = LORefreshFooterStateRefreshing;
+}
+
+- (BOOL)isRefreshing
+{
+    return _headerState == LORefreshFooterStateRefreshing;
+}
+
+- (void)endRefreshing
+{
+    self.headerState = LORefreshFooterStateIdle;
+}
+
+- (void)setScrollView:(UIScrollView *)scrollView
+{
+    [super setScrollView:scrollView];
+    
+    //在上拉加载更多的时候,scrollView(及其子类) 的contentSize.height 会变大.我们需要改变 footer 的 frame,确保它显示在最下方
+    [self.scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    //如果当前状态是 LORefreshHeaderStateRefreshing 不再做检测处理
+    if (_headerState ==  LORefreshHeaderStateRefreshing) {
+        return;
+    }
+    [self adjustStateWithContentOffset];
+}
+
+- (void)adjustStateWithContentOffset
+{
+    //记录 scrollView原始的上边距.  方便刷新之后,把 scrollView 的contentInset改回这个位置.
+    
+    if (_headerState == LORefreshHeaderStateRefreshing) {
+        return;
+    }
+    
+    //当前的偏移量
+    CGFloat contentOffsetY = self.scrollView.contentOffset.y;
+    
+    //scrollView左上角 原始偏移量(默认是0),在有导航栏的情况下可能会被调整为64.
+    CGFloat happenOffsetY = -self.scrollView.contentInset.top;
+    
+    
+
+    //如果往上滑动,直接 return
+    if (contentOffsetY >= happenOffsetY) {
+        
+        return;
+    }
+    
+    //header 完全出现时的contentOffset.y
+    CGFloat headerCompleteDisplayContentOffsetY = happenOffsetY - kHeaderHeight;
+    NSLog(@"%f  %f  %f",contentOffsetY,happenOffsetY,headerCompleteDisplayContentOffsetY);
+    
+    self.circle_view.progress = (happenOffsetY - contentOffsetY) / (-happenOffsetY);
+
+    if (self.scrollView.isDragging == YES) {//如果正在拖拽
+        //如果当前状态是 LORefreshStateIdle(闲置状态或者叫正常状态) && header 已经全部显示
+        if (_headerState == LORefreshHeaderStateIdle && contentOffsetY < headerCompleteDisplayContentOffsetY) {
+            //将状态设置为  松开就可以进行刷新的状态
+            self.headerState = LORefreshHeaderStatePulling;
+            NSLog(@"下拉状态");
+        }else if (_headerState == LORefreshHeaderStatePulling && contentOffsetY > headerCompleteDisplayContentOffsetY){//如果当前状态是 LORefreshStatePulling(松开就可以进行刷新的状态) && header只显示了一部分(用户往上滑动了)
+            self.headerState = LORefreshHeaderStateIdle;
+            NSLog(@"常态");
+        }
+    }else{//如果松开了手
+        if (_headerState == LORefreshHeaderStatePulling) {//如果状态是1,下拉状态.让它进入刷新状态
+            self.headerState = LORefreshHeaderStateRefreshing;
+            NSLog(@"刷新中");
+        }
+    }
+}
+
+@end
 
 
 
-#pragma mark - LORefresh 实现部分
+#pragma mark - LORefreshControl 实现部分
 
 @implementation LORefreshControl
 @synthesize scrollView = _scrollView;
@@ -754,19 +880,39 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 + (instancetype)refreshWithRefreshViewType:(LORefreshViewType)refreshViewType refreshingBlock:(void (^)())block
 {
     //目前 LORefresh 只支持3种类型的 RefreshView(与LORefresh.h 文件中的 LORefreshViewType一一对应)
-    NSArray *classNames = @[@"LORefreshHeaderDefault",@"LORefreshHeaderGIF",@"LORefreshFooterDefault"];
+    LORefreshControl *refresh_control = nil;
     
-    //下面的判断是一个容错处理(refreshViewType超出了范围返回 nil)
-    //如果 其他 开发者要扩展 LORefresh 类,可以增加枚举值,增加 LORefresh 的子类
-    if (refreshViewType < [classNames count]) {
-        Class className = NSClassFromString(classNames[refreshViewType]);
-        LORefreshControl *refresh = [[className alloc] init];
-        refresh.refreshingBlock = block;
-        
-        return [refresh autorelease];
-    }else{
-        return nil;
+    switch (refreshViewType) {
+        case LORefreshViewTypeFooterDefault:
+        {
+            refresh_control = [[LORefreshFooterDefault alloc] init];
+            break;
+        }
+        case LORefreshViewTypeHeaderDefault:
+        {
+            refresh_control = [[LORefreshHeaderDefault alloc] init];
+            break;
+        }
+        case LORefreshViewTypeHeaderGif:
+        {
+            refresh_control = [[LORefreshHeaderGIF alloc] init];
+            break;
+        }
+        /* 
+         *hide by lewis at 2015.7.5
+        case LORefreshViewTypeHeaderProgress:
+        {
+            refresh_control = [[LORefreshHeaderProgress alloc] init];
+            break;
+        }
+         */
+        default:
+            break;
     }
+    
+    refresh_control.refreshingBlock = block;
+    
+    return refresh_control;
 }
 
 
@@ -838,6 +984,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 - (void)endRefreshing
 {
+    
 }
 
 

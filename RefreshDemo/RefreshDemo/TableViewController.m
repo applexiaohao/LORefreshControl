@@ -7,7 +7,7 @@
 //
 
 #import "TableViewController.h"
-#import "LORefresh.h"
+#import "LORefreshControl.h"
 
 @interface TableViewController ()
 @property (nonatomic, retain)NSMutableArray *dataArray;

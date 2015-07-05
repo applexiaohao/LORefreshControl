@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "LORefresh.h"
+#import "LORefreshControl.h"
 
 @interface ViewController ()
 {

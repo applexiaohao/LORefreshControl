@@ -120,6 +120,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 - (void)beginRefreshing
 {
     self.headerState = LORefreshHeaderStateRefreshing;
+    [super beginRefreshing];
 }
 
 - (BOOL)isRefreshing
@@ -130,6 +131,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 - (void)endRefreshing
 {
     self.headerState = LORefreshHeaderStateIdle;
+    [super endRefreshing];
 }
 
 - (void)setScrollView:(UIScrollView *)scrollView
@@ -975,6 +977,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 - (void)beginRefreshing
 {
+    [self setNeedsLayout];
 }
 
 - (BOOL)isRefreshing
@@ -984,7 +987,7 @@ typedef NS_ENUM(NSUInteger, LORefreshFooterState){
 
 - (void)endRefreshing
 {
-    
+    [self setNeedsLayout];
 }
 
 

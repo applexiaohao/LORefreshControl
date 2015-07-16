@@ -54,26 +54,28 @@
     }];
     
     
-//    [self.tableView addRefreshWithRefreshViewType:LORefreshViewTypeHeaderDefault refreshingBlock:^{
-//        [weakSelf.dataArray removeAllObjects];
-//        for (int i = 0; i < 20; i++) {
-//            NSString *str = [NSString stringWithFormat:@"%d",100 + arc4random()%100];
-//            [weakSelf.dataArray addObject:str];
-//        }
-//        [weakSelf.tableView reloadData];
-//        [weakSelf.tableView.defaultHeader endRefreshing];
-//    }];
-    
-    [self.tableView addRefreshWithRefreshViewType:LORefreshViewTypeHeaderGif refreshingBlock:^{
+    [self.tableView addRefreshWithRefreshViewType:LORefreshViewTypeHeaderDefault refreshingBlock:^{
         [weakSelf.dataArray removeAllObjects];
         for (int i = 0; i < 20; i++) {
             NSString *str = [NSString stringWithFormat:@"%d",100 + arc4random()%100];
             [weakSelf.dataArray addObject:str];
         }
         [weakSelf.tableView reloadData];
-        [weakSelf.tableView.gifHeader endRefreshing];
+        [weakSelf.tableView.defaultHeader endRefreshing];
     }];
-    [self.tableView.gifHeader setGifName:@"demo.gif"];
+    
+//    [self.tableView addRefreshWithRefreshViewType:LORefreshViewTypeHeaderGif refreshingBlock:^{
+//        [weakSelf.dataArray removeAllObjects];
+//        for (int i = 0; i < 20; i++) {
+//            NSString *str = [NSString stringWithFormat:@"%d",100 + arc4random()%100];
+//            [weakSelf.dataArray addObject:str];
+//        }
+//        [weakSelf.tableView reloadData];
+//        [weakSelf.tableView.gifHeader endRefreshing];
+//    }];
+//    [self.tableView.gifHeader setGifName:@"demo.gif"];
+//    
+    [self.tableView.defaultHeader beginRefreshing];
     
     
 //    self.tableView.defaultHeader.refreshLayoutType = LORefreshLayoutTypeTopIndicator;
